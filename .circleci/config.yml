@@ -1,3 +1,11 @@
+workflows:
+  version: 2
+  check-and-build:
+    jobs:
+      - check
+      - build:
+          requires:
+            - check
 version: 2.1
 jobs:
   check:
@@ -51,11 +59,3 @@ jobs:
           command: |
               mv target/universal/scala-demo.zip $CIRCLE_ARTIFACTS/$ARTIFACT_BUILD
               aws s3 cp $CIRCLE_ARTIFACTS/$ARTIFACT_BUILD s3://ronpowelljr-scala-demo/builds/scala-demo/ --metadata {\"git_sha1\":\"$CIRCLE_SHA1\"}
-workflows:
-  version: 2
-  check-and-build:
-    jobs:
-      - check
-      - build:
-          requires:
-            - check
