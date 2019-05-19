@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  check:
+  test:
     docker:
       - image: circleci/python:2.7.14
     steps:
@@ -52,3 +52,9 @@ jobs:
           command: |
               mv target/universal/scala-demo.zip $CIRCLE_ARTIFACTS/$ARTIFACT_BUILD
               aws s3 cp $CIRCLE_ARTIFACTS/$ARTIFACT_BUILD s3://ronpowelljr-scala-demo/builds/scala-demo/ --metadata {\"git_sha1\":\"$CIRCLE_SHA1\"}
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - test
+      - build
