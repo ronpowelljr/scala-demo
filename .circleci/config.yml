@@ -1,5 +1,19 @@
 version: 2
 jobs:
+  check:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - run:
+          name: Get Bintray Status
+          command: |
+                    BT_URL=’https://status.bintray.com/api/v2/status.json’
+                    BT_STATUS=$(curl -s $BT_URL |  jq --raw-output '.status.description')
+                    echo “Bintray API Status: $BT_STATUS”
+                    if [ “$BT_STATUS” != “All Systems Operational” ]; then
+                      echo “Error [Bintray API Status: $BT_STATUS]”
+                      exit 1
+                    fi
   build:
     working_directory: ~/scala-demo
     docker:
@@ -12,15 +26,6 @@ jobs:
           name: Get sbt binary
           command: |
                     apt update && apt install -y curl 
-                    apt-get update && apt-get install -y --no-install-recommends apt-utils
-                    apt-get install -y jq
-                    BT_URL=’https://status.bintray.com/api/v2/status.json’
-                    BT_STATUS=$(curl -s $BT_URL |  jq --raw-output '.status.description')
-                    echo “Bintray API Status: $BT_STATUS”
-                    if [ “$BT_STATUS” != “All Systems Operational” ]; then
-                      echo “Error [Bintray API Status: $BT_STATUS]”
-                      exit 1
-                    fi
                     curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb
                     dpkg -i sbt-$SBT_VERSION.deb
                     rm sbt-$SBT_VERSION.deb
