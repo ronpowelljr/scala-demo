@@ -13,7 +13,7 @@ jobs:
       - image: circleci/python:2.7.14
     steps:
       - run:
-          name: Get API status
+          name: Get Bintray API status
           command: |
                     BT_STATUS=$(curl -s https://status.bintray.com/api/v2/status.json |  jq --raw-output '.status.description')
                     echo “Bintray API Status: $BT_STATUS”
