@@ -7,7 +7,6 @@ jobs:
       - run:
           name: Get API status
           command: |
-                    BT_URL=’https://status.bintray.com/api/v2/status.json’
                     BT_STATUS=$(curl -s https://status.bintray.com/api/v2/status.json |  jq --raw-output '.status.description')
                     echo “Bintray API Status: $BT_STATUS”
                     if [ “$BT_STATUS” != “All Systems Operational” ]; then
@@ -17,7 +16,7 @@ jobs:
   build:
     working_directory: ~/scala-demo
     docker:
-      - image: openjdk:11.0
+      - image: openjdk:8
     environment:
       - SBT_VERSION: 1.0.4
     steps:
