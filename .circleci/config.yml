@@ -7,7 +7,6 @@ jobs:
       - run:
           name: Get API status
           command: |
-                    apt update && apt install -y curl 
                     BT_URL=’https://status.bintray.com/api/v2/status.json’
                     BT_STATUS=$(curl -s $BT_URL |  jq '.status.description')
                     echo “Bintray API Status: $BT_STATUS”
